@@ -13,6 +13,8 @@ import {
   PieChart,
   Pie,
   Cell,
+  BarChart,
+  Bar,
 } from "recharts";
 
 // ------------------- THEME COLORS -------------------
@@ -77,7 +79,7 @@ const trucks: Truck[] = [
   { id: 3, name: "Truck #103", lat: 12.99, lng: 80.23, status: "delayed", ph: 7.5, inlet: 1000, outlet: 900, capacity: 1200 },
 ];
 
-// ------------------- Areas Requiring Water -------------------
+// ------------------- Water Demand Areas -------------------
 interface WaterDemandArea {
   id: number;
   name: string;
@@ -85,18 +87,35 @@ interface WaterDemandArea {
   lng: number;
   demandLevel: "High" | "Medium" | "Low";
   requiredWater: number; // KL
-  predictedWater?: number; // KL - ML prediction
-  predictedTime?: string; // timestamp
+  predictedWater?: number; // KL
+  predictedTime?: string;
 }
 
-// Example ML-predicted values with timestamps
 const demandAreas: WaterDemandArea[] = [
   { id: 1, name: "T. Nagar", lat: 13.04, lng: 80.24, demandLevel: "High", requiredWater: 500, predictedWater: 520, predictedTime: "10:30 AM" },
   { id: 2, name: "Adyar", lat: 13.01, lng: 80.25, demandLevel: "Medium", requiredWater: 300, predictedWater: 330, predictedTime: "10:45 AM" },
   { id: 3, name: "Porur", lat: 13.03, lng: 80.18, demandLevel: "Low", requiredWater: 150, predictedWater: 160, predictedTime: "11:00 AM" },
 ];
 
-// ------------------- Icons -------------------
+// ------------------- Predicted Water for 1 Week -------------------
+interface PredictedWeekEntry {
+  area: string;
+  predicted: number;
+  demandLevel: "High" | "Medium" | "Low";
+  time: string;
+}
+
+const predictedWeek: PredictedWeekEntry[] = [
+  { area: "T. Nagar", predicted: 520, demandLevel: "High", time: "10:30 AM" },
+  { area: "Adyar", predicted: 330, demandLevel: "Medium", time: "10:45 AM" },
+  { area: "Porur", predicted: 160, demandLevel: "Low", time: "11:00 AM" },
+  { area: "Velachery", predicted: 400, demandLevel: "High", time: "11:15 AM" },
+  { area: "Mylapore", predicted: 380, demandLevel: "Medium", time: "11:30 AM" },
+  { area: "Guindy", predicted: 210, demandLevel: "Low", time: "11:45 AM" },
+  { area: "Nungambakkam", predicted: 450, demandLevel: "High", time: "12:00 PM" },
+];
+
+// ------------------- Map Icon -------------------
 const truckIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/743/743922.png",
   iconSize: [38, 38],
@@ -139,9 +158,12 @@ export default function SuperAdminDashboard() {
   const [hoveredKpi, setHoveredKpi] = useState<number | null>(null);
   const [hoveredMiniKpi, setHoveredMiniKpi] = useState<number | null>(null);
 
+  const getBarColor = (level: "High" | "Medium" | "Low") =>
+    level === "High" ? colors.red : level === "Medium" ? colors.orange : colors.green;
+
   return (
     <main style={{ padding: "20px", overflowY: "auto", minHeight: "100vh", backgroundColor: colors.background, marginLeft: "260px" }}>
-      {/* Main KPI Row */}
+      {/* KPIs */}
       <Row className="g-4 mb-4">
         {kpis.map((item, idx) => (
           <Col md={3} key={idx}>
@@ -158,9 +180,7 @@ export default function SuperAdminDashboard() {
               <Card.Body>
                 <i className={`bi ${item.icon} mb-2`} style={{ fontSize: "2rem", color: colors.primary }}></i>
                 <Card.Title className="text-muted fw-bold">{item.title}</Card.Title>
-                <Card.Text className="fs-2 fw-bold" style={{ color: colors.primary }}>
-                  {item.value}
-                </Card.Text>
+                <Card.Text className="fs-2 fw-bold" style={{ color: colors.primary }}>{item.value}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -184,41 +204,31 @@ export default function SuperAdminDashboard() {
               <Card.Body>
                 <i className={`bi ${item.icon} mb-2`} style={{ fontSize: "1.5rem", color: item.color }}></i>
                 <Card.Title className="text-muted fw-bold">{item.title}</Card.Title>
-                <Card.Text className="fs-3 fw-bold" style={{ color: item.color }}>
-                  {item.value}
-                </Card.Text>
+                <Card.Text className="fs-3 fw-bold" style={{ color: item.color }}>{item.value}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
 
-      {/* Water Truck Tracking Map + Charts */}
+      {/* Truck Map + Charts */}
       <Row className="g-4 mt-4">
-        {/* Truck Tracking Map */}
+        {/* Truck Map */}
         <Col md={6}>
           <Card className="shadow-sm border-0 h-100">
             <Card.Body>
               <Card.Title style={{ color: colors.text }}>Truck Water Tracking</Card.Title>
               <div style={{ height: "500px" }}>
                 <MapContainer center={chennaiCenter} zoom={12} style={{ height: "100%", width: "100%" }}>
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-                  />
-                  {trucks.map((truck) => (
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' />
+                  {trucks.map(truck => (
                     <Marker key={truck.id} position={[truck.lat, truck.lng]} icon={truckIcon}>
                       <Popup>
-                        <strong>{truck.name}</strong>
-                        <br />
-                        Status: {truck.status}
-                        <br />
-                        pH: {truck.ph}
-                        <br />
-                        Inlet: {truck.inlet} KL
-                        <br />
-                        Outlet: {truck.outlet} KL
-                        <br />
+                        <strong>{truck.name}</strong><br/>
+                        Status: {truck.status}<br/>
+                        pH: {truck.ph}<br/>
+                        Inlet: {truck.inlet} KL<br/>
+                        Outlet: {truck.outlet} KL<br/>
                         Capacity: {truck.capacity} KL
                       </Popup>
                     </Marker>
@@ -249,6 +259,7 @@ export default function SuperAdminDashboard() {
                 </Card.Body>
               </Card>
             </Col>
+
             <Col xs={12}>
               <Card className="shadow-sm border-0 h-100">
                 <Card.Body>
@@ -257,9 +268,7 @@ export default function SuperAdminDashboard() {
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie data={qualityData} dataKey="value" nameKey="name" label outerRadius={70}>
-                          {qualityData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
+                          {qualityData.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
                         </Pie>
                         <Tooltip />
                       </PieChart>
@@ -272,33 +281,25 @@ export default function SuperAdminDashboard() {
         </Col>
       </Row>
 
-      {/* Water Demand Map + Area Details */}
+      {/* Water Demand Map + Details */}
       <Row className="g-4 mt-4">
-        {/* Water Demand Map */}
+        {/* Demand Map */}
         <Col md={6}>
           <Card className="shadow-sm border-0 h-100">
             <Card.Body>
-              <Card.Title style={{ color: colors.text }}>Areas Requiring Water </Card.Title>
+              <Card.Title style={{ color: colors.text }}>Areas Requiring Water</Card.Title>
               <div style={{ height: "500px" }}>
                 <MapContainer center={chennaiCenter} zoom={12} style={{ height: "100%", width: "100%" }}>
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-                  />
-                  {demandAreas.map((area) => {
-                    const radius = (area.predictedWater ?? area.requiredWater) * 2; // scaled using predicted
-                    const color =
-                      area.demandLevel === "High" ? colors.red :
-                      area.demandLevel === "Medium" ? colors.orange : colors.green;
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' />
+                  {demandAreas.map(area => {
+                    const radius = (area.predictedWater ?? area.requiredWater) * 2;
+                    const color = area.demandLevel === "High" ? colors.red : area.demandLevel === "Medium" ? colors.orange : colors.green;
                     return (
                       <Circle key={area.id} center={[area.lat, area.lng]} radius={radius} color={color} fillOpacity={0.4}>
                         <Popup>
-                          <strong>{area.name}</strong>
-                          <br />
-                          Actual Demand: {area.requiredWater} KL
-                          <br />
-                          Predicted Demand: {area.predictedWater ?? area.requiredWater} KL
-                          <br />
+                          <strong>{area.name}</strong><br/>
+                          Actual Demand: {area.requiredWater} KL<br/>
+                          Predicted Demand: {area.predictedWater ?? area.requiredWater} KL<br/>
                           Predicted Time: {area.predictedTime ?? "-"}
                         </Popup>
                       </Circle>
@@ -319,12 +320,9 @@ export default function SuperAdminDashboard() {
                 {demandAreas.map((area) => (
                   <li key={area.id} className="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                      <strong>{area.name}</strong>
-                      <br />
-                      <span className="text-muted">Demand Level: {area.demandLevel}</span>
-                      <br />
-                      <span className="text-muted">Predicted: {area.predictedWater ?? area.requiredWater} KL</span>
-                      <br />
+                      <strong>{area.name}</strong><br/>
+                      <span className="text-muted">Demand Level: {area.demandLevel}</span><br/>
+                      <span className="text-muted">Predicted: {area.predictedWater ?? area.requiredWater} KL</span><br/>
                       <span className="text-muted">Time: {area.predictedTime ?? "-"}</span>
                     </div>
                     <span className={`badge rounded-pill ${
@@ -336,6 +334,34 @@ export default function SuperAdminDashboard() {
                   </li>
                 ))}
               </ul>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Predicted Water for 1 Week */}
+      <Row className="g-4 mt-4">
+        <Col md={12}>
+          <Card className="shadow-sm border-0">
+            <Card.Body>
+              <Card.Title style={{ color: colors.text }}>Predicted Water Demand for 1 Week</Card.Title>
+              <div style={{ height: "350px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={predictedWeek}>
+                    <XAxis dataKey="area" stroke={colors.text} />
+                    <YAxis stroke={colors.text} />
+                    <Tooltip formatter={(value: number, _name, props) => {
+                      const areaData = props?.payload as PredictedWeekEntry;
+                      return `${value} KL at ${areaData.time}`;
+                    }} />
+                    <Bar dataKey="predicted">
+                      {predictedWeek.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={getBarColor(entry.demandLevel)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </Card.Body>
           </Card>
         </Col>
