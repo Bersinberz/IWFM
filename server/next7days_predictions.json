@@ -1,0 +1,205 @@
+[
+  {
+    "date": "2025-10-27",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 675.7,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 663.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 699.3,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 917.8,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-10-28",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1806.8,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 1394.4,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1811.3,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 2196.2,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-10-29",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1921.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 2193.4,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1944.5,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 1506.3,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-10-30",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1572.0,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 1368.2,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1590.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 1781.6,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-10-31",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1834.3,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 1581.7,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1885.4,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 2092.5,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-11-01",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1824.6,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 2067.8,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1848.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 1448.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "date": "2025-11-02",
+    "areas": [
+      {
+        "area": "Adyar",
+        "predicted": 1687.8,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Chromepet",
+        "predicted": 1429.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "T. Nagar",
+        "predicted": 1708.1,
+        "demandLevel": "High",
+        "time": "10:00"
+      },
+      {
+        "area": "Velachery",
+        "predicted": 1921.5,
+        "demandLevel": "High",
+        "time": "10:00"
+      }
+    ]
+  }
+]
