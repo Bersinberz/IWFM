@@ -109,20 +109,6 @@ python train.py
 ```
 This action will yield a serialized `tanker_demand_model.pkl` along with `.png` files saved to the local `graphs` directory reflecting predictions and residual distributions.
 
----
-
-## 📈 ML Visualization Samples
-
-The platform's predictive engine continuously trains to recognize seasonality and baseline demands. Below are representational visual scopes:
-- **`actual_vs_predicted.png`**: Cross-references trained predictions with verifiable historical outcomes.
-- **`predicted_next_7_days.png`**: Extrapolates future consumption paths aiding logistic preparations.
-- **`residuals_distribution.png`**: Validates prediction algorithm efficiencies via variance checks.
-
----
-
-## 🛡️ License
-
-This project is proprietary. All rights reserved.
 
 <div align="center">
   <i>Structured and meticulously crafted for exceptional operational reliability.</i>
